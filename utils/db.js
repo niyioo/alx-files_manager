@@ -36,8 +36,9 @@ class DBClient {
 
   async getUserByEmail(email) {
     const usersCollection = this.client.db().collection('users');
-    return usersCollection.findOne({ email });
+    return await usersCollection.findOne({ email });
   }
+  
 
   async createUser(email, hashedPassword) {
     try {
