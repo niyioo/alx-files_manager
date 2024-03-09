@@ -49,7 +49,7 @@ class DBClient {
       console.error('Error creating user:', error);
       throw error;
     }
-  }
+  } 
 }
 
 // Create and export an instance of DBClient
