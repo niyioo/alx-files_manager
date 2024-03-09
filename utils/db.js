@@ -38,7 +38,6 @@ class DBClient {
     const usersCollection = this.client.db().collection('users');
     return await usersCollection.findOne({ email });
   }
-  
 
   async createUser(email, hashedPassword) {
     try {
@@ -49,7 +48,7 @@ class DBClient {
       console.error('Error creating user:', error);
       throw error;
     }
-  } 
+  }
 }
 
 // Create and export an instance of DBClient
