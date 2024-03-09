@@ -16,7 +16,7 @@ export default class UsersController {
     try {
       // Check if the email already exists in the database
       const existingUser = await dbClient.getUserByEmail(email);
-      if (existingUser && existingUser.email) {
+      if (existingUser) {
         return response.status(400).json({ error: 'Already exist' });
       }
 
