@@ -26,20 +26,20 @@ class DBClient {
     const usersCollection = this.client.db().collection('users');
     return usersCollection.countDocuments();
   }
-  
+
   async nbFiles() {
     const filesCollection = this.client.db().collection('files');
     return filesCollection.countDocuments();
-  }  
+  }
 
   async getUserByEmail(email) {
     const usersCollection = this.client.db().collection('users');
-    return await usersCollection.findOne({ email });
+    return usersCollection.findOne({ email });
   }
 
   async getUserByToken(token) {
     const usersCollection = this.client.db().collection('users');
-    return await usersCollection.findOne({ token });
+    return usersCollection.findOne({ token });
   }
 
   async createUser(email, hashedPassword) {
