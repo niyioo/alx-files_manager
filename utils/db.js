@@ -68,12 +68,12 @@ class DBClient {
   async deleteUserToken(userId) {
     try {
       const usersCollection = this.client.db().collection('users');
-      await usersCollection.updateOne({ _id: userId }, { $unset: { token: "" } });
+      await usersCollection.updateOne({ _id: userId }, { $unset: { token: '' } });
     } catch (error) {
       console.error('Error deleting user token:', error);
       throw error;
     }
-  }  
+  }
 }
 
 // Create and export an instance of DBClient

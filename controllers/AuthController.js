@@ -42,26 +42,26 @@ export default class AuthController {
 
   static async getDisconnect(request, response) {
     const { 'x-token': token } = request.headers;
-  
+
     if (!token) {
       return response.status(401).json({ error: 'Unauthorized' });
     }
-  
+
     try {
       // Retrieve the user ID associated with the token
       const userId = await dbClient.getUserByToken(token);
-  
+
       if (!userId) {
         return response.status(401).json({ error: 'Unauthorized' });
       }
-  
+
       // Delete the token from the database
       await dbClient.deleteUserToken(userId, token);
-  
+
       return response.status(204).send();
     } catch (error) {
       console.error('Error signing out:', error);
       return response.status(500).json({ error: 'Internal Server Error' });
     }
-  }  
+  }
 }
