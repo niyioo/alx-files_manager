@@ -1,45 +1,36 @@
-import sha1 from 'sha1'; // for hashing passwords
 import dbClient from '../utils/db';
+import { createHash } from 'crypto';
 
-const UsersController = {
-  async postNew(req, res) {
-    const { email, password } = req.body;
+export default class UsersController {
+  static async postNew(request, response) {
+    const { email, password } = request.body;
 
     // Check if email and password are provided
     if (!email) {
-      return res.status(400).json({ error: 'Missing email' });
+      return response.status(400).json({ error: 'Missing email' });
     }
     if (!password) {
-      return res.status(400).json({ error: 'Missing password' });
+      return response.status(400).json({ error: 'Missing password' });
     }
-
-    // Check if email already exists in DB
-    const existingUser = await dbClient.db.collection('users').findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ error: 'Already exist' });
-    }
-
-    // Hash the password
-    const hashedPassword = sha1(password);
-
-    // Create new user object
-    const newUser = {
-      email,
-      password: hashedPassword,
-    };
 
     try {
-      // Insert new user into the database
-      const result = await dbClient.db.collection('users').insertOne(newUser);
-      const { insertedId } = result;
+      // Check if the email already exists in the database
+      const existingUser = await dbClient.getUserByEmail(email);
+      if (existingUser) {
+        return response.status(400).json({ error: 'Already exist' });
+      }
 
-      // Return the new user with only email and id
-      return res.status(201).json({ id: insertedId, email });
+      // Hash the password using SHA1
+      const hashedPassword = createHash('sha1').update(password).digest('hex');
+
+      // Create a new user in the database
+      const newUser = await dbClient.createUser(email, hashedPassword);
+
+      // Return the new user with only the email and id
+      return response.status(201).json({ id: newUser._id, email: newUser.email });
     } catch (error) {
-      console.error('Error creating user:', error);
-      return res.status(500).json({ error: 'Internal Server Error' });
+      // Handle any errors
+      return response.status(500).json({ error: error.message });
     }
-  },
-};
-
-export default UsersController;
+  }
+}
