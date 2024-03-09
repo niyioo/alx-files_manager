@@ -22,6 +22,11 @@ class RedisClient {
     // Convert duration to seconds if provided in milliseconds
     const seconds = Math.ceil(duration / 1000);
 
+    // Check if the duration is a valid integer
+    if (!Number.isInteger(seconds) || seconds <= 0) {
+      throw new Error('Invalid expiration duration');
+    }
+
     // Store the value in Redis with an expiration set by the duration argument
     const setAsync = promisify(this.client.SET).bind(this.client);
     return setAsync(key, value, 'EX', seconds);
