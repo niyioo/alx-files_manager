@@ -31,6 +31,7 @@ export default class AuthController {
       const key = `auth_${token}`;
 
       await redisClient.set(key, user._id.toString(), 24 * 60 * 60 * 1000);
+      await dbClient.createUserToken(user._id.toString(), token);
 
       return response.status(200).json({ token });
     } catch (error) {
