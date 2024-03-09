@@ -33,6 +33,11 @@ class DBClient {
     const filesCollection = this.client.db().collection('files');
     return filesCollection.countDocuments();
   }
+
+  async getUserByEmail(email) {
+    const usersCollection = this.client.db().collection('users');
+    return usersCollection.findOne({ email });
+  }
 }
 
 // Create and export an instance of DBClient
