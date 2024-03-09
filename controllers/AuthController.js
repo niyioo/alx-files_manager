@@ -1,6 +1,5 @@
 import { createHash } from 'crypto';
 import { v4 as uuidv4 } from 'uuid';
-import redisClient from '../utils/redis';
 import dbClient from '../utils/db';
 
 export default class AuthController {
@@ -28,7 +27,6 @@ export default class AuthController {
       }
 
       const token = uuidv4();
-      const key = `auth_${token}`;
 
       // Store the token in the database
       await dbClient.createUserToken(user._id, token);
@@ -56,7 +54,7 @@ export default class AuthController {
       }
 
       // Delete the token from the database
-      await dbClient.deleteUserToken(userId, token);
+      await dbClient.deleteUserToken(userId);
 
       return response.status(204).send();
     } catch (error) {

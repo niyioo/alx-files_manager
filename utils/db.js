@@ -23,16 +23,14 @@ class DBClient {
   }
 
   async nbUsers() {
-    // Return the number of documents in the 'users' collection
     const usersCollection = this.client.db().collection('users');
     return usersCollection.countDocuments();
   }
-
+  
   async nbFiles() {
-    // Return the number of documents in the 'files' collection
     const filesCollection = this.client.db().collection('files');
     return filesCollection.countDocuments();
-  }
+  }  
 
   async getUserByEmail(email) {
     const usersCollection = this.client.db().collection('users');
