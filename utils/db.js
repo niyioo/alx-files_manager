@@ -54,6 +54,16 @@ class DBClient {
       throw error;
     }
   }
+
+  async createUserToken(userId, token) {
+    try {
+      const usersCollection = this.client.db().collection('users');
+      await usersCollection.updateOne({ _id: userId }, { $set: { token } });
+    } catch (error) {
+      console.error('Error creating user token:', error);
+      throw error;
+    }
+  }
 }
 
 // Create and export an instance of DBClient
