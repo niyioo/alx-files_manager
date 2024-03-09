@@ -22,6 +22,8 @@ class RedisClient {
     // Convert duration to seconds if provided in milliseconds
     const seconds = Math.ceil(duration / 1000);
 
+    console.log('Expiration duration in seconds:', seconds);
+
     // Check if the duration is a valid integer
     if (!Number.isInteger(seconds) || seconds <= 0) {
       throw new Error('Invalid expiration duration');
