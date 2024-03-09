@@ -1,9 +1,9 @@
-import sha1 from 'sha1'; // for hashing passwords
 import dbClient from '../utils/db';
+import { createHash } from 'crypto';
 
-const UsersController = {
-  async postNew(req, res) {
-    const { email, password } = req.body;
+export default class UsersController {
+  static async postNew(request, response) {
+    const { email, password } = request.body;
 
     // Check if email and password are provided
     if (!email) {
