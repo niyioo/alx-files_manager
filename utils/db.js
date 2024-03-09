@@ -39,6 +39,11 @@ class DBClient {
     return await usersCollection.findOne({ email });
   }
 
+  async getUserByToken(token) {
+    const usersCollection = this.client.db().collection('users');
+    return await usersCollection.findOne({ token });
+  }
+
   async createUser(email, hashedPassword) {
     try {
       const usersCollection = this.client.db().collection('users');

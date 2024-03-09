@@ -33,4 +33,26 @@ export default class UsersController {
       return response.status(500).json({ error: error.message });
     }
   }
+
+  static async getMe(request, response) {
+    const token = request.headers['x-token'];
+
+    if (!token) {
+      return response.status(401).json({ error: 'Unauthorized' });
+    }
+
+    try {
+      // Retrieve the user based on the token
+      const user = await dbClient.getUserByToken(token);
+
+      if (!user) {
+        return response.status(401).json({ error: 'Unauthorized' });
+      }
+
+      // Return the user object (email and id only)
+      return response.status(200).json({ id: user._id, email: user.email });
+    } catch (error) {
+      return response.status(500).json({ error: error.message });
+    }
+  }
 }
