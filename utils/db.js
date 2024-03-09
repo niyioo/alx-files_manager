@@ -33,6 +33,22 @@ class DBClient {
     const filesCollection = this.client.db().collection('files');
     return filesCollection.countDocuments();
   }
+
+  async getUserByEmail(email) {
+    const usersCollection = this.client.db().collection('users');
+    return await usersCollection.findOne({ email });
+  }
+
+  async createUser(email, hashedPassword) {
+    try {
+      const usersCollection = this.client.db().collection('users');
+      const result = await usersCollection.insertOne({ email, password: hashedPassword });
+      return result.ops[0];
+    } catch (error) {
+      console.error('Error creating user:', error);
+      throw error;
+    }
+  }
 }
 
 // Create and export an instance of DBClient
