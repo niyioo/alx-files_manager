@@ -63,4 +63,41 @@ export default class FilesController {
       return response.status(500).json({ error: 'Internal Server Error' });
     }
   }
+
+  static async getShow(request, response) {
+    const { 'x-token': token } = request.headers;
+    const { id } = request.params;
+
+    // Retrieve the user based on the token
+    const user = await dbClient.getUserByToken(token);
+    if (!user) {
+      return response.status(401).json({ error: 'Unauthorized' });
+    }
+
+    // Retrieve the file document based on the ID
+    const file = await dbClient.getFileById(id);
+    if (!file) {
+      return response.status(404).json({ error: 'Not found' });
+    }
+
+    return response.status(200).json(file);
+  }
+
+  static async getIndex(request, response) {
+    const { 'x-token': token } = request.headers;
+    const { parentId = '0', page = 0 } = request.query;
+
+    // Retrieve the user based on the token
+    const user = await dbClient.getUserByToken(token);
+    if (!user) {
+      return response.status(401).json({ error: 'Unauthorized' });
+    }
+
+    // Retrieve files based on parentId and pagination
+    const pageSize = 20;
+    const skip = parseInt(page) * pageSize;
+
+    const files = await dbClient.getFilesByParentId(parentId, skip, pageSize);
+    return response.status(200).json(files);
+  }
 }
