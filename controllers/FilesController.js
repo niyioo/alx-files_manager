@@ -56,27 +56,26 @@ export default class FilesController {
     }
 
     // Create file document in the database
-try {
-    const newFile = await dbClient.createFile(
-      user._id, name, type, parentId, isPublic, localPath,
-    );
-    
-    // Construct the response object with only the desired fields
-    const responseFile = {
-      id: newFile._id,
-      userId: newFile.userId,
-      name: newFile.name,
-      type: newFile.type,
-      isPublic: newFile.isPublic,
-      parentId: newFile.parentId,
-    };
-  
-    return response.status(201).json(responseFile);
-  } catch (error) {
-    console.error('Error creating file:', error);
-    return response.status(500).json({ error: 'Internal Server Error' });
-  }
-  
+    try {
+      const newFile = await dbClient.createFile(
+        user._id, name, type, parentId, isPublic, localPath,
+      );
+
+      // Construct the response object with only the desired fields
+      const responseFile = {
+        id: newFile._id,
+        userId: newFile.userId,
+        name: newFile.name,
+        type: newFile.type,
+        isPublic: newFile.isPublic,
+        parentId: newFile.parentId,
+      };
+
+      return response.status(201).json(responseFile);
+    } catch (error) {
+      console.error('Error creating file:', error);
+      return response.status(500).json({ error: 'Internal Server Error' });
+    }
   }
 
   static async getShow(request, response) {
