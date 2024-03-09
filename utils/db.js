@@ -1,4 +1,4 @@
-import { MongoClient } from 'mongodb';
+import { MongoClient, ObjectId } from 'mongodb';
 
 class DBClient {
   constructor() {
@@ -69,6 +69,34 @@ class DBClient {
       await usersCollection.updateOne({ _id: userId }, { $unset: { token: '' } });
     } catch (error) {
       console.error('Error deleting user token:', error);
+      throw error;
+    }
+  }
+
+  async getFileById(fileId) {
+    try {
+      const filesCollection = this.client.db().collection('files');
+      return await filesCollection.findOne({ _id: ObjectId(fileId) });
+    } catch (error) {
+      console.error('Error getting file by ID:', error);
+      throw error;
+    }
+  }
+
+  async createFile(userId, name, type, parentId = 0, isPublic = false, localPath = '') {
+    try {
+      const filesCollection = this.client.db().collection('files');
+      const result = await filesCollection.insertOne({
+        userId: ObjectId(userId),
+        name,
+        type,
+        parentId: parentId === 0 ? parentId : ObjectId(parentId),
+        isPublic,
+        localPath
+      });
+      return result.ops[0];
+    } catch (error) {
+      console.error('Error creating file:', error);
       throw error;
     }
   }
