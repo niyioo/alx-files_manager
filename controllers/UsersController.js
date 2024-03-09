@@ -1,5 +1,5 @@
-import { createHash } from 'crypto';
 import dbClient from '../utils/db';
+import { createHash } from 'crypto';
 
 export default class UsersController {
   static async postNew(request, response) {
@@ -16,7 +16,7 @@ export default class UsersController {
     try {
       // Check if the email already exists in the database
       const existingUser = await dbClient.getUserByEmail(email);
-      if (existingUser) {
+      if (existingUser && existingUser.email) {
         return response.status(400).json({ error: 'Already exist' });
       }
 
