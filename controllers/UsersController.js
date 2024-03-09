@@ -1,4 +1,3 @@
-import { v4 as uuidv4 } from 'uuid'; // for generating random IDs
 import sha1 from 'sha1'; // for hashing passwords
 import dbClient from '../utils/db';
 
@@ -35,10 +34,10 @@ const UsersController = {
       const { insertedId } = result;
 
       // Return the new user with only email and id
-      res.status(201).json({ id: insertedId, email });
+      return res.status(201).json({ id: insertedId, email });
     } catch (error) {
       console.error('Error creating user:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
+      return res.status(500).json({ error: 'Internal Server Error' });
     }
   },
 };
