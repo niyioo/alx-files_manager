@@ -1,5 +1,6 @@
 import { createHash } from 'crypto';
 import dbClient from '../utils/db';
+import { userQueue } from '../worker';
 
 export default class UsersController {
   static async postNew(request, response) {
@@ -25,6 +26,9 @@ export default class UsersController {
 
       // Create a new user in the database
       const newUser = await dbClient.createUser(email, hashedPassword);
+
+      // Enqueue job to send welcome email
+      await userQueue.add({ userId: newUser._id });
 
       // Return the new user with only the email and id
       return response.status(201).json({ id: newUser._id, email: newUser.email });
