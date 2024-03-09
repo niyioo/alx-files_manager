@@ -19,9 +19,12 @@ class RedisClient {
   }
 
   async set(key, value, duration) {
+    // Convert duration to seconds if provided in milliseconds
+    const seconds = Math.ceil(duration / 1000);
+    
     // Store the value in Redis with an expiration set by the duration argument
     const setAsync = promisify(this.client.SET).bind(this.client);
-    return setAsync(key, value, 'EX', duration);
+    return setAsync(key, value, 'EX', seconds);
   }
 
   async del(key) {
