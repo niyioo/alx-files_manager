@@ -92,7 +92,7 @@ class DBClient {
         type,
         parentId: parentId === 0 ? parentId : ObjectId(parentId),
         isPublic,
-        localPath
+        localPath,
       });
       return result.ops[0];
     } catch (error) {

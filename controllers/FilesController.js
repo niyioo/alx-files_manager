@@ -1,7 +1,7 @@
-import dbClient from '../utils/db';
 import fs from 'fs';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
+import dbClient from '../utils/db';
 
 export default class FilesController {
   static async postUpload(request, response) {
@@ -13,7 +13,9 @@ export default class FilesController {
       return response.status(401).json({ error: 'Unauthorized' });
     }
 
-    const { name, type, data, parentId = 0, isPublic = false } = request.body;
+    const {
+      name, type, data, parentId = 0, isPublic = false,
+    } = request.body;
 
     // Validation checks for missing fields
     if (!name) {
@@ -52,7 +54,9 @@ export default class FilesController {
 
     // Create file document in the database
     try {
-      const newFile = await dbClient.createFile(user._id, name, type, parentId, isPublic, localPath);
+      const newFile = await dbClient.createFile(
+        user._id, name, type, parentId, isPublic, localPath,
+      );
       return response.status(201).json(newFile);
     } catch (error) {
       console.error('Error creating file:', error);
