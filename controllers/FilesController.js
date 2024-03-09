@@ -95,7 +95,7 @@ export default class FilesController {
 
     // Retrieve files based on parentId and pagination
     const pageSize = 20;
-    const skip = parseInt(page) * pageSize;
+    const skip = parseInt(page, 10) * pageSize;
 
     const files = await dbClient.getFilesByParentId(parentId, skip, pageSize);
     return response.status(200).json(files);
