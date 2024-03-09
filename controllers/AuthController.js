@@ -1,5 +1,6 @@
 import { createHash } from 'crypto';
 import { v4 as uuidv4 } from 'uuid';
+import redisClient from '../utils/redis';
 import dbClient from '../utils/db';
 
 export default class AuthController {
@@ -27,9 +28,10 @@ export default class AuthController {
       }
 
       const token = uuidv4();
+      const key = `auth_${token}`;
 
-      // Store the token in the database
-      await dbClient.createUserToken(user._id, token);
+      // Store the token in Redis with user ID as value and expiration of 24 hours
+      await redisClient.set(key, user._id, 'EX', 86400);
 
       return response.status(200).json({ token });
     } catch (error) {
@@ -46,15 +48,15 @@ export default class AuthController {
     }
 
     try {
-      // Retrieve the user ID associated with the token
-      const userId = await dbClient.getUserByToken(token);
+      // Retrieve the user ID associated with the token from Redis
+      const userId = await redisClient.get(`auth_${token}`);
 
       if (!userId) {
         return response.status(401).json({ error: 'Unauthorized' });
       }
 
-      // Delete the token from the database
-      await dbClient.deleteUserToken(userId);
+      // Delete the token from Redis
+      await redisClient.del(`auth_${token}`);
 
       return response.status(204).send();
     } catch (error) {
